@@ -7,14 +7,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class FTPLinkModel {
     @Id
     private String id;
-  
     private String ftpLink;
 
-    public FTPLinkModel () {}
+    public FTPLinkModel() {
+    }
 
-    public FTPLinkModel(String id, String ftpLink) {
-        super();
-        this.id = id;
+    public FTPLinkModel(String ftpLink) {
         this.ftpLink = ftpLink;
     }
 
