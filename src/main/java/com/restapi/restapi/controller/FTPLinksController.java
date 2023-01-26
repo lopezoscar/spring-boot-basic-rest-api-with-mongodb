@@ -4,6 +4,7 @@ import com.restapi.restapi.dto.FTPLinkDTO;
 import com.restapi.restapi.model.FTPLinkModel;
 import com.restapi.restapi.service.FTPLinkService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ public class FTPLinksController {
         this.ftpLinkService = ftpLinkService;
     }
 
-    @PostMapping("/")
+    @PostMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public FTPLinkModel createFTPServerLink(@RequestBody FTPLinkDTO newFTPLink) {
         try {
             FTPLinkModel ftpLinkCreated = ftpLinkService.createFTPLink(newFTPLink);
@@ -34,7 +35,7 @@ public class FTPLinksController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<FTPLinkModel>> getFTPServerLink() {
         List<FTPLinkModel> response = ftpLinkService.getFTPLinks();
         return new ResponseEntity<>(response, HttpStatus.OK);
