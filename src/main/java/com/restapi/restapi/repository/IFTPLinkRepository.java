@@ -1,19 +1,13 @@
 package com.restapi.restapi.repository;
 
-import java.util.List;
-
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-
 import com.restapi.restapi.model.FTPLinkModel;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface IFTPLinkRepository extends MongoRepository<FTPLinkModel, String> {
 
-    @Query("{}")
-    List<FTPLinkModel> findAll ();
+    Optional<List<FTPLinkModel>> findAllByFtpLink(String url);
 
-    @Query("{ftpLink: '?0'}")
-    List<FTPLinkModel> findByUrl(String url);
-
-    public long count();
 }

@@ -1,33 +1,41 @@
 package com.restapi.restapi.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.restapi.restapi.dto.FTPLinkDTO;
 import com.restapi.restapi.model.FTPLinkModel;
 import com.restapi.restapi.repository.IFTPLinkRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FTPLinkService {
 
-    @Autowired
-    private IFTPLinkRepository ftpLinkRepository;
+    private final IFTPLinkRepository ftpLinkRepository;
 
-    public FTPLinkModel createFTPLink (FTPLinkDTO newFTPLink) throws IllegalArgumentException {
-        List<FTPLinkModel> existsFTPLink = ftpLinkRepository.findByUrl(newFTPLink.getFtpLink());
-        if(existsFTPLink != null && existsFTPLink.size() > 0 ) {
-            throw new IllegalArgumentException("FTP Link can`t be duplicated");
-        }
+    public FTPLinkService(IFTPLinkRepository ftpLinkRepository) {
+        this.ftpLinkRepository = ftpLinkRepository;
+    }
 
-        FTPLinkModel newFTPLinkData = new FTPLinkModel();
-        newFTPLinkData.setFtpLink(newFTPLink.getFtpLink());
+    public FTPLinkModel createFTPLink(FTPLinkDTO newFTPLink) throws IllegalArgumentException {
+        Optional<List<FTPLinkModel>> allFtpLink = ftpLinkRepository.findAllByFtpLink(newFTPLink.getFtpLink());
+        validateFTPLink(allFtpLink);
+        FTPLinkModel newFTPLinkData = new FTPLinkModel(newFTPLink.getFtpLink());
         return ftpLinkRepository.save(newFTPLinkData);
     }
 
-    public List<FTPLinkModel> getFTPLinks () {
+    public List<FTPLinkModel> getFTPLinks() {
         List<FTPLinkModel> ftpLinks = ftpLinkRepository.findAll();
         return ftpLinks;
     }
+    
+    private void validateFTPLink(Optional<List<FTPLinkModel>> allFtpLink) {
+        if (allFtpLink.isPresent()) {
+            List<FTPLinkModel> ftpLinkModels = allFtpLink.get();
+            if (ftpLinkModels.size() > 0) {
+                throw new IllegalArgumentException("FTP Link can't be duplicated");
+            }
+        }
+    }
+
 }
